@@ -51,6 +51,7 @@ namespace efcore_test
         }
     }
 
+    // for dotnet tools
     public class ApiContextFactory : IDesignTimeDbContextFactory<ApiContext>
     {
         public ApiContext CreateDbContext(string[] args)

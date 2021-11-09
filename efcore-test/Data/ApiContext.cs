@@ -26,7 +26,6 @@ namespace efcore_test.Data
         public string DeviceName { get; set; }
 
         public List<History> Histories { get; } = new List<History>();
-        public List<Attribute> Attributes { get; } = new List<Attribute>();
     }
 
     public class History
@@ -40,15 +39,6 @@ namespace efcore_test.Data
 
         public int? LocationId { get; set; }
         public Location Location { get; set; }
-    }
-
-    public class Attribute
-    {
-        public int AttributeId { get; set; }
-        public string Name { get; set; }
-
-        public int DeviceId { get; set; }
-        public Device Device { get; set; }
     }
 
     public class Location
@@ -65,7 +55,7 @@ namespace efcore_test.Data
         {
             var current = entity.Histories.First();
             return new efcore_test.Device(entity.DeviceId, current.DateFrom, current.State,
-                current.Location?.LocationName, string.Join(", ", entity.Attributes.Select(a => a.Name)))
+                current.Location?.LocationName)
             {
                 DeviceName = entity.DeviceName
             };

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using efcore_test.Data;
 using Microsoft.EntityFrameworkCore;
-using Attribute = efcore_test.Data.Attribute;
 
 namespace efcore_test
 {
@@ -28,11 +27,10 @@ namespace efcore_test
             var devices = _apiContext.Devices.AsNoTracking()
                 .Include(d => d.Histories.OrderByDescending(h => h.DateFrom).Take(1))
                 .ThenInclude(h => h.Location)
-                .Include(d => d.Attributes)
                 .Select(d => d.ToModel()).ToList();
 
             Console.WriteLine($"{devices.Count} Devices:");
-            devices.ForEach(d => Console.WriteLine($"{d.DeviceId}\t{d.DeviceName}\t{d.DateFrom}\t{d.State}\t{d.Attributes}\t{d.LocationName}"));
+            devices.ForEach(d => Console.WriteLine($"{d.DeviceId}\t{d.DeviceName}\t{d.DateFrom}\t{d.State}\t{d.LocationName}"));
             return devices;
         }
 
@@ -41,7 +39,6 @@ namespace efcore_test
             var device = _apiContext.Devices.AsNoTracking()
                 .Include(d => d.Histories.OrderByDescending(h => h.DateFrom).Take(1))
                 .ThenInclude(h => h.Location)
-                .Include(d => d.Attributes)
                 .First(d => d.DeviceId == deviceId)
                 //.Where(d => d.DeviceId == deviceId) // workaround
                 //.AsEnumerable() // switch to client evaluation (LINQ to Objects context)
@@ -49,7 +46,7 @@ namespace efcore_test
                 .ToModel();
 
             Console.WriteLine(
-                $"{device.DeviceId}\t{device.DeviceName}\t{device.DateFrom}\t{device.State}\t{device.Attributes}\t{device.LocationName}");
+                $"{device.DeviceId}\t{device.DeviceName}\t{device.DateFrom}\t{device.State}\t{device.LocationName}");
         }
 
         public void AddDevices()
@@ -67,9 +64,6 @@ namespace efcore_test
                     history.Location = _apiContext.Locations.OrderBy(r => Guid.NewGuid()).First();
                 }
                 device.Histories.Add(history);
-                device.Attributes.Add(new Attribute {Name = "foo"});
-                device.Attributes.Add(new Attribute {Name = "bar"});
-                device.Attributes.Add(new Attribute {Name = "baz"});
                 _apiContext.Devices.Add(device);
             }
             _apiContext.SaveChanges();

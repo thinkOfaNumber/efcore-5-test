@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace efcore_test.Migrations
 {
-    public partial class Attributes : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -21,23 +21,16 @@ namespace efcore_test.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Attribute",
+                name: "Locations",
                 columns: table => new
                 {
-                    AttributeId = table.Column<int>(type: "int", nullable: false)
+                    LocationId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
+                    LocationName = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Attribute", x => x.AttributeId);
-                    table.ForeignKey(
-                        name: "FK_Attribute_Devices_DeviceId",
-                        column: x => x.DeviceId,
-                        principalTable: "Devices",
-                        principalColumn: "DeviceId",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Locations", x => x.LocationId);
                 });
 
             migrationBuilder.CreateTable(
@@ -48,7 +41,8 @@ namespace efcore_test.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DateFrom = table.Column<DateTime>(type: "datetime2", nullable: false),
                     State = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    DeviceId = table.Column<int>(type: "int", nullable: false)
+                    DeviceId = table.Column<int>(type: "int", nullable: false),
+                    LocationId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -59,29 +53,35 @@ namespace efcore_test.Migrations
                         principalTable: "Devices",
                         principalColumn: "DeviceId",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Histories_Locations_LocationId",
+                        column: x => x.LocationId,
+                        principalTable: "Locations",
+                        principalColumn: "LocationId",
+                        onDelete: ReferentialAction.Restrict);
                 });
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Attribute_DeviceId",
-                table: "Attribute",
-                column: "DeviceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Histories_DeviceId",
                 table: "Histories",
                 column: "DeviceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Histories_LocationId",
+                table: "Histories",
+                column: "LocationId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Attribute");
-
-            migrationBuilder.DropTable(
                 name: "Histories");
 
             migrationBuilder.DropTable(
                 name: "Devices");
+
+            migrationBuilder.DropTable(
+                name: "Locations");
         }
     }
 }

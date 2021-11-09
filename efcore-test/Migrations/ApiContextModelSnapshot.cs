@@ -19,26 +19,6 @@ namespace efcore_test.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("efcore_test.Data.Attribute", b =>
-                {
-                    b.Property<int>("AttributeId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("DeviceId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("AttributeId");
-
-                    b.HasIndex("DeviceId");
-
-                    b.ToTable("Attribute");
-                });
-
             modelBuilder.Entity("efcore_test.Data.Device", b =>
                 {
                     b.Property<int>("DeviceId")
@@ -97,17 +77,6 @@ namespace efcore_test.Migrations
                     b.ToTable("Locations");
                 });
 
-            modelBuilder.Entity("efcore_test.Data.Attribute", b =>
-                {
-                    b.HasOne("efcore_test.Data.Device", "Device")
-                        .WithMany("Attributes")
-                        .HasForeignKey("DeviceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Device");
-                });
-
             modelBuilder.Entity("efcore_test.Data.History", b =>
                 {
                     b.HasOne("efcore_test.Data.Device", "Device")
@@ -127,8 +96,6 @@ namespace efcore_test.Migrations
 
             modelBuilder.Entity("efcore_test.Data.Device", b =>
                 {
-                    b.Navigation("Attributes");
-
                     b.Navigation("Histories");
                 });
 
